@@ -87,16 +87,16 @@ function App() {
   };
 
   const handleNavigate = (page: Page) => {
-    // 如果会员弹窗打开，阻止导航
+    // 如果会员弹窗打开，先关闭弹窗再导航
     if (showMembershipModal) {
-      return;
+      setShowMembershipModal(false);
     }
     
     if ((page === 'galxe' || page === 'admin' || page === 'notifications') && !user) {
       setCurrentPage('login');
       return;
     }
-    if (page === 'admin' && (!user?.isAdmin)) {
+    if (page === 'admin' && !user?.isAdmin) {
       return; // 非管理员无法访问
     }
     if (page === 'membership') {

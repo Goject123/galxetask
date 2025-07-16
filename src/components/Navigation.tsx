@@ -186,7 +186,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onNavigate, user, 
                     {user?.isAdmin && (
                       <button
                         onClick={() => {
-                          onNavigate('admin');
+                          onNavigate('admin' as any);
                           setShowUserMenu(false);
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 text-left text-purple-600 hover:bg-purple-50 transition-colors duration-200"
