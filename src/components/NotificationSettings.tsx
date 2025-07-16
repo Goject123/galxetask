@@ -3,15 +3,32 @@ import { Bell, Key, Save, Clock, Smartphone, MessageSquare, Download, CheckCircl
 
 const NotificationSettings: React.FC = () => {
   const [selectedProvider, setSelectedProvider] = useState<'bark' | 'serverchan' | 'ntfy'>('bark');
-  const [barkKey, setBarkKey] = useState('2vkiQ9mFTPskLPcdp3aiDL');
+  const [barkKey, setBarkKey] = useState('');
   const [serverChanKey, setServerChanKey] = useState('');
   const [ntfyTopic, setNtfyTopic] = useState('');
   const [startTime, setStartTime] = useState('08:00');
   const [endTime, setEndTime] = useState('22:00');
   const [allDayNotification, setAllDayNotification] = useState(false);
   const [showBarkTutorial, setShowBarkTutorial] = useState(false);
+  
+  // 模拟已保存的配置状态
+  const [savedConfigs, setSavedConfigs] = useState({
+    bark: false,
+    serverchan: false,
+    ntfy: false,
+  });
 
   const providers = [
+    {
+      id: 'ntfy' as const,
+      name: 'ntfy',
+      description: '开源免费，跨平台推送',
+      icon: Bell,
+      color: 'from-orange-500 to-red-500',
+      platforms: ['iOS', 'Android', 'Web'],
+      price: '免费',
+      recommended: 'Android用户推荐',
+    },
     {
       id: 'bark' as const,
       name: 'Bark',
@@ -32,21 +49,48 @@ const NotificationSettings: React.FC = () => {
       price: '付费',
       recommended: '微信用户推荐',
     },
-    {
-      id: 'ntfy' as const,
-      name: 'ntfy',
-      description: '开源免费，跨平台推送',
-      icon: Bell,
-      color: 'from-orange-500 to-red-500',
-      platforms: ['iOS', 'Android', 'Web'],
-      price: '免费',
-      recommended: 'Android用户推荐',
-    },
   ];
+
+  // 检查当前选择的服务是否已配置
+  const getCurrentConfig = () => {
+    switch (selectedProvider) {
+      case 'bark':
+        return barkKey.trim() !== '';
+      case 'serverchan':
+        return serverChanKey.trim() !== '';
+      case 'ntfy':
+        return ntfyTopic.trim() !== '';
+      default:
+        return false;
+    }
+  };
 
   const handleSave = () => {
     // 保存设置逻辑
+    setSavedConfigs(prev => ({
+      ...prev,
+      [selectedProvider]: getCurrentConfig()
+    }));
     console.log('保存通知设置');
+  };
+
+  const handleClearConfig = () => {
+    // 清除当前选择的配置
+    switch (selectedProvider) {
+      case 'bark':
+        setBarkKey('');
+        break;
+      case 'serverchan':
+        setServerChanKey('');
+        break;
+      case 'ntfy':
+        setNtfyTopic('');
+        break;
+    }
+    setSavedConfigs(prev => ({
+      ...prev,
+      [selectedProvider]: false
+    }));
   };
 
   const handleTest = () => {
@@ -98,6 +142,11 @@ const NotificationSettings: React.FC = () => {
                             }`}>
                               {provider.price}
                             </span>
+                            {savedConfigs[provider.id] && (
+                              <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
+                                已设置
+                              </span>
+                            )}
                           </div>
                           <p className="text-sm text-gray-600 mb-2">{provider.description}</p>
                           <div className="flex flex-wrap gap-1 mb-2">
@@ -125,9 +174,44 @@ const NotificationSettings: React.FC = () => {
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
                   <Key className="w-6 h-6" />
                   {providers.find(p => p.id === selectedProvider)?.name} 配置
+                  {savedConfigs[selectedProvider] && (
+                    <span className="text-sm bg-white bg-opacity-20 px-2 py-1 rounded-full">
+                      已设置
+                    </span>
+                  )}
                 </h3>
               </div>
               <div className="p-6">
+                {selectedProvider === 'ntfy' && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        ntfy Topic
+                      </label>
+                      <input
+                        type="text"
+                        value={ntfyTopic}
+                        onChange={(e) => setNtfyTopic(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 font-mono text-sm"
+                        placeholder="输入您的 Topic 名称..."
+                      />
+                    </div>
+                    <div className="bg-orange-50 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <Info className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+                        <div className="text-sm text-orange-700">
+                          <p className="font-medium mb-1">使用说明：</p>
+                          <ul className="space-y-1 text-xs">
+                            <li>• 开源免费的推送服务</li>
+                            <li>• 需要下载 ntfy 应用（Google Play / App Store）</li>
+                            <li>• 支持自定义服务器，隐私保护好</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {selectedProvider === 'bark' && (
                   <div className="space-y-4">
                     <div>
@@ -194,50 +278,30 @@ const NotificationSettings: React.FC = () => {
                   </div>
                 )}
 
-                {selectedProvider === 'ntfy' && (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        ntfy Topic
-                      </label>
-                      <input
-                        type="text"
-                        value={ntfyTopic}
-                        onChange={(e) => setNtfyTopic(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 font-mono text-sm"
-                        placeholder="输入您的 Topic 名称..."
-                      />
-                    </div>
-                    <div className="bg-orange-50 rounded-lg p-4">
-                      <div className="flex items-start gap-3">
-                        <Info className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm text-orange-700">
-                          <p className="font-medium mb-1">使用说明：</p>
-                          <ul className="space-y-1 text-xs">
-                            <li>• 开源免费的推送服务</li>
-                            <li>• 需要下载 ntfy 应用（Google Play / App Store）</li>
-                            <li>• 支持自定义服务器，隐私保护好</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
                 <div className="flex gap-3 mt-6">
                   <button 
                     onClick={handleSave}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    disabled={!getCurrentConfig()}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-lg disabled:transform-none disabled:shadow-none"
                   >
                     <Save className="w-5 h-5" />
                     保存配置
                   </button>
                   <button 
                     onClick={handleTest}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200"
+                    disabled={!savedConfigs[selectedProvider]}
+                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                   >
                     测试通知
                   </button>
+                  {savedConfigs[selectedProvider] && (
+                    <button 
+                      onClick={handleClearConfig}
+                      className="px-6 py-3 border border-red-300 text-red-600 rounded-xl hover:bg-red-50 transition-all duration-200"
+                    >
+                      取消设置
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
