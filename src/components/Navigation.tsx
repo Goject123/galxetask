@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Zap, Home, Settings, User, LogOut, Menu, X, Crown } from 'lucide-react';
+import { Zap, Home, Settings, User, LogOut, Menu, X, Crown, Bell } from 'lucide-react';
 
-type Page = 'home' | 'galxe' | 'login' | 'register' | 'profile' | 'membership';
+type Page = 'home' | 'galxe' | 'login' | 'register' | 'profile' | 'membership' | 'notifications';
 
 interface User {
   email: string;
@@ -90,6 +90,20 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onNavigate, user, 
               >
                 <Settings className="w-5 h-5" />
                 <span>Galxe 管理</span>
+              </button>
+            )}
+            
+            {user && (
+              <button
+                onClick={() => onNavigate('notifications')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                  currentPage === 'notifications'
+                    ? 'bg-blue-50 text-blue-600 font-medium'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <Bell className="w-5 h-5" />
+                <span>通知设置</span>
               </button>
             )}
           </div>
@@ -247,6 +261,23 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onNavigate, user, 
                 >
                   <Settings className="w-5 h-5" />
                   <span>Galxe 管理</span>
+                </button>
+              )}
+
+              {user && (
+                <button
+                  onClick={() => {
+                    onNavigate('notifications');
+                    setShowMobileMenu(false);
+                  }}
+                  className={`w-full flex items-center space-x-2 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    currentPage === 'notifications'
+                      ? 'bg-blue-50 text-blue-600 font-medium'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  <Bell className="w-5 h-5" />
+                  <span>通知设置</span>
                 </button>
               )}
 

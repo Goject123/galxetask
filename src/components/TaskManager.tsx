@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Settings, Bell, Trash2, Clock, Key, Save, Play, Pause, Link, Search } from 'lucide-react';
+import { Plus, Settings, Trash2, Play, Pause, Search } from 'lucide-react';
 
 interface Task {
   id: number;
@@ -8,10 +8,9 @@ interface Task {
 }
 
 interface TaskManagerProps {
-  onShowBarkTutorial: () => void;
 }
 
-const TaskManager: React.FC<TaskManagerProps> = ({ onShowBarkTutorial }) => {
+const TaskManager: React.FC<TaskManagerProps> = () => {
   const [tasks, setTasks] = useState<Task[]>([
     { id: 1, taskId: '40', name: 'BNB Chain' },
     { id: 2, taskId: '1659', name: '示例Space' },
@@ -20,10 +19,6 @@ const TaskManager: React.FC<TaskManagerProps> = ({ onShowBarkTutorial }) => {
 
   const [newTaskUrl, setNewTaskUrl] = useState('');
   const [newTaskName, setNewTaskName] = useState('');
-  const [barkKey, setBarkKey] = useState('2vkiQ9mFTPskLPcdp3aiDL');
-  const [startTime, setStartTime] = useState('08:00');
-  const [endTime, setEndTime] = useState('22:00');
-  const [allDayNotification, setAllDayNotification] = useState(false);
   const [notificationRunning, setNotificationRunning] = useState(true);
 
   const addTask = () => {
@@ -138,96 +133,6 @@ const TaskManager: React.FC<TaskManagerProps> = ({ onShowBarkTutorial }) => {
           </div>
         </div>
 
-        {/* Settings Grid */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Bark Key Settings */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <Key className="w-6 h-6" />
-                Bark Key 设置
-              </h3>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    API Key
-                    <button 
-                      onClick={onShowBarkTutorial}
-                      className="ml-2 text-blue-600 hover:text-blue-800 text-sm underline"
-                    >
-                      设置教程
-                    </button>
-                  </label>
-                  <input
-                    type="text"
-                    value={barkKey}
-                    onChange={(e) => setBarkKey(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 font-mono text-sm"
-                    placeholder="输入您的 Bark Key..."
-                  />
-                </div>
-                <button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                  <Save className="w-5 h-5" />
-                  保存
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Notification Time Settings */}
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-4">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                <Bell className="w-6 h-6" />
-                通知时间段设置
-              </h3>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <input
-                      type="time"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-                  <span className="text-gray-400">~</span>
-                  <div className="flex-1">
-                    <input
-                      type="time"
-                      value={endTime}
-                      onChange={(e) => setEndTime(e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="allDay"
-                    checked={allDayNotification}
-                    onChange={(e) => setAllDayNotification(e.target.checked)}
-                    className="w-4 h-4 text-amber-600 bg-gray-100 border-gray-300 rounded focus:ring-amber-500 focus:ring-2"
-                  />
-                  <label htmlFor="allDay" className="text-sm font-medium text-gray-700">
-                    全天推送
-                  </label>
-                </div>
-
-                <button className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 transform hover:scale-105 shadow-lg">
-                  <Save className="w-5 h-5" />
-                  保存
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
@@ -264,7 +169,7 @@ const TaskManager: React.FC<TaskManagerProps> = ({ onShowBarkTutorial }) => {
                 </div>
               </div>
               <div className={`p-3 rounded-lg ${notificationRunning ? 'bg-green-100' : 'bg-gray-100'}`}>
-                <Bell className={`w-6 h-6 ${notificationRunning ? 'text-green-600' : 'text-gray-400'}`} />
+                <Settings className={`w-6 h-6 ${notificationRunning ? 'text-green-600' : 'text-gray-400'}`} />
               </div>
             </div>
           </div>

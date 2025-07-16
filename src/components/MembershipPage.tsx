@@ -174,16 +174,16 @@ const MembershipPage: React.FC<MembershipPageProps> = ({ onSelectPlan, onClose, 
           {/* Action Buttons */}
           <div className="flex justify-center gap-4">
             <button
-              onClick={onClose}
-              className="px-8 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200"
-            >
-              取消
-            </button>
-            <button
               onClick={handleSelectPlan}
               className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               {selectedPlan === 'free' ? '选择免费计划' : '立即开通'}
+            </button>
+            <button
+              onClick={onClose}
+              className="px-8 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200"
+            >
+              取消
             </button>
           </div>
         </div>

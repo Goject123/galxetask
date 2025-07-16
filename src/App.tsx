@@ -8,8 +8,9 @@ import MembershipPage from './components/MembershipPage';
 import UserProfile from './components/UserProfile';
 import BarkTutorial from './components/BarkTutorial';
 import AdminDashboard from './components/AdminDashboard';
+import NotificationSettings from './components/NotificationSettings';
 
-type Page = 'home' | 'galxe' | 'login' | 'register' | 'profile' | 'membership' | 'admin';
+type Page = 'home' | 'galxe' | 'login' | 'register' | 'profile' | 'membership' | 'notifications' | 'admin';
 
 interface User {
   email: string;
@@ -86,7 +87,12 @@ function App() {
   };
 
   const handleNavigate = (page: Page) => {
-    if ((page === 'galxe' || page === 'admin') && !user) {
+    // 如果会员弹窗打开，阻止导航
+    if (showMembershipModal) {
+      return;
+    }
+    
+    if ((page === 'galxe' || page === 'admin' || page === 'notifications') && !user) {
       setCurrentPage('login');
       return;
     }
@@ -101,7 +107,7 @@ function App() {
   };
 
   // 如果用户未登录且访问需要登录的页面
-  if (!user && (currentPage === 'galxe' || currentPage === 'profile' || currentPage === 'admin')) {
+  if (!user && (currentPage === 'galxe' || currentPage === 'profile' || currentPage === 'admin' || currentPage === 'notifications')) {
     return (
       <LoginPage 
         onLogin={handleLogin}
@@ -139,6 +145,21 @@ function App() {
           onLogout={handleLogout}
         />
         <UserProfile user={user} onLogout={handleLogout} />
+        <UserProfile user={user} onLogout={handleLogout} onOpenMembership={() => setShowMembershipModal(true)} />
+      </div>
+    );
+  }
+
+  if (currentPage === 'notifications' && user) {
+    return (
+      <div className="min-h-screen">
+        <Navigation 
+          currentPage={currentPage} 
+          onNavigate={handleNavigate}
+          user={user}
+          onLogout={handleLogout}
+        />
+        <NotificationSettings />
       </div>
     );
   }
@@ -178,7 +199,7 @@ function App() {
       {currentPage === 'home' ? (
         <HomePage onNavigateToGalxe={() => handleNavigate('galxe')} />
       ) : (
-        <TaskManager onShowBarkTutorial={() => setShowBarkTutorial(true)} />
+        <TaskManager />
       )}
     </div>
   );

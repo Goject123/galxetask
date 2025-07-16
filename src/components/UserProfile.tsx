@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Calendar, Crown, Settings, Bell, Shield, CreditCard, LogOut, Clock } from 'lucide-react';
+import { User, Mail, Calendar, Crown, Settings, Bell, Shield, CreditCard, LogOut, Clock, Gift } from 'lucide-react';
 
 interface UserProfileProps {
   user: {
@@ -11,9 +11,10 @@ interface UserProfileProps {
     expiryDate?: string;
   };
   onLogout: () => void;
+  onOpenMembership?: () => void;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout, onOpenMembership }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'settings'>('profile');
 
   const planInfo = {
@@ -83,7 +84,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout }) => {
                 {[
                   { id: 'profile', label: '个人资料', icon: User },
                   { id: 'subscription', label: '订阅管理', icon: CreditCard },
-                  { id: 'settings', label: '兑换码', icon: Settings },
                 ].map((item) => {
                   const IconComponent = item.icon;
                   return (
@@ -245,7 +245,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout }) => {
                       <p className="text-gray-600 mb-4">
                         升级到更高级的套餐，享受更多监控任务和高级功能
                       </p>
-                      <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105">
+                      <button 
+                        onClick={onOpenMembership}
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
+                      >
                         立即升级
                       </button>
                     </div>
@@ -258,68 +261,46 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, onLogout }) => {
                       <p className="text-gray-600 mb-4">
                         您的会员即将到期，续费可继续享受所有会员权益
                       </p>
-                      <button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105">
+                      <button 
+                        onClick={onOpenMembership}
+                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
+                      >
                         立即续费
                       </button>
                     </div>
                   )}
-                </div>
-              </div>
-            )}
 
-            {activeTab === 'settings' && (
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">兑换码</h2>
-                
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      会员兑换码
-                    </label>
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
-                        placeholder="输入兑换码..."
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      />
-                      <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105">
-                        兑换
-                      </button>
+                  {/* 兑换码部分 */}
+                  <div className="border border-purple-200 rounded-xl p-6 bg-purple-50">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Gift className="w-5 h-5 text-purple-600" />
+                      兑换码
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          会员兑换码
+                        </label>
+                        <div className="flex gap-3">
+                          <input
+                            type="text"
+                            placeholder="输入兑换码..."
+                            className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                          />
+                          <button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105">
+                            兑换
+                          </button>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-2">
+                          输入有效的兑换码可获得相应的会员权益
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-sm text-gray-500 mt-2">
-                      输入有效的兑换码可获得相应的会员权益
-                    </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {activeTab === 'settings' && (
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">兑换码</h2>
-                
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      会员兑换码
-                    </label>
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
-                        placeholder="输入兑换码..."
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                      />
-                      <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105">
-                        兑换
-                      </button>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-2">
-                      输入有效的兑换码可获得相应的会员权益
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
